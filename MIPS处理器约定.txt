@@ -1,0 +1,25 @@
+OPCode
+blez	h6
+bgtz	h7
+bltz	h1
+JALR Jump And Link Register	rd=pc; pc=rs	000000 rs 00000	rd 00000 001001
+
+PCSrc PC+4:0 branch:1 j,jal:2 jr,jalr:3
+RegDst 0:rt 1:rd 2:$ra
+MemtoReg 0:ALUout 1:MEMout
+ALUorRA 0:ALUrslt(ALU计算结果) 1:PC+4(用于jal,jalr) 作为ALUout
+MemWriteDataSource, //0:不转发 1:从WB转发
+
+ALUSrcA 0:busA 1:Shamt
+ALUSrcB 0:busB 1:Imm
+
+busAMUX busBMUX 0:不转发 1:从EXMEM转发 2:从WB转发
+
+寄存器的阻塞与清零
+0:正常顺序执行 1:清零 2:保持
+
+阻塞处置办法
+若第i级之前的指令需要阻塞，则将第1~i-2级后的寄存器保持，i-1级的寄存器清0，PC
+
+BCD控制方法
+向0x40000010中写32位数，[31:12]补0 [11:8]an [7:0]BCDData
