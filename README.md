@@ -18,7 +18,7 @@
 
 ### 设计框图
 
-![design](C:\Study\2023Summer\Processor\design.jpg)
+//img
 
 由于控制信号和中间变量过多，部分细节未在此图上画出。
 
@@ -301,11 +301,11 @@ beq $t0, 0xf dispF
 
 本仿真使用春季学期数逻汇编大作业的测试样例作为测试样例，从源点到各点的最短路径距离分别为8 3 5 10 8，和为34，十六进制表示为0x22。由于采用软件方式控制外设BCD，理论上BCD使能an为1时，BCD应当显示2，对应内存为`0x5b`，an为2时，对应内存为`0x5b`，an为4或8时，BCD应当显示0，对应内存为`0x3f`。我将结果用返回值存在$v0中，也就是2号寄存器。仿真结果如下
 
-![image-20230801113702121](C:\Users\Carson Ma\AppData\Roaming\Typora\typora-user-images\image-20230801113702121.png)
+//img
 
 可以看出，CPU得到了正确的结果，并且数码管的使能信号与显示内容均正确。这验证了本处理器在功能设计上是正确的。由于需要保证更好的显示效果，显示一位BCD需要多个周期的时间，所以上图中好像结果瞬间就出了，但事实上放大前半部分才能看到计算过程。
 
-![image-20230801114728613](C:\Users\Carson Ma\AppData\Roaming\Typora\typora-user-images\image-20230801114728613.png)
+//img
 
 ## 综合与实现情况
 
@@ -315,31 +315,31 @@ beq $t0, 0xf dispF
 
 综合
 
-![image-20230801170943501](C:\Users\Carson Ma\AppData\Roaming\Typora\typora-user-images\image-20230801170943501.png)
+//img
 
 综合后的时序裕量为0.822ns
 
 实现
 
-![image-20230801171022214](C:\Users\Carson Ma\AppData\Roaming\Typora\typora-user-images\image-20230801171022214.png)
+//img
 
 实现后的时序裕量为0.251ns，说明CPU能稳定工作的最短时钟周期为9.749ns，最高时钟频率为102.57MHz。
 
 关键路径情况
 
-![image-20230801171929352](C:\Users\Carson Ma\AppData\Roaming\Typora\typora-user-images\image-20230801171929352.png)
+//img
 
 截至$v0返回正确结果的算法指令数
 
-![image-20230801131154733](C:\Users\Carson Ma\AppData\Roaming\Typora\typora-user-images\image-20230801131154733.png)
+//img
 
 算法开始时间
 
-![算法开始时间](C:\Study\2023Summer\Processor\时序分析\算法开始时间.png)
+//img
 
 算法结束时间
 
-![算法结束时间](C:\Study\2023Summer\Processor\时序分析\算法结束时间.png)
+//img
 
 CPI：
 
@@ -352,13 +352,13 @@ CPI较高，主要是因为汇编大作业写Dijkstra算法时尚没有流水线
 
 ### 资源占用
 
-![image-20230801172321574](C:\Users\Carson Ma\AppData\Roaming\Typora\typora-user-images\image-20230801172321574.png)
+//img
 
-![image-20230801172254390](C:\Users\Carson Ma\AppData\Roaming\Typora\typora-user-images\image-20230801172254390.png)
+//img
 
 ## 硬件调试情况
 
-![rslt](C:\Study\2023Summer\Processor\rslt.jpg)
+//img
 
 实际结果与仿真结果吻合。
 
@@ -398,15 +398,14 @@ demo_dijkstra.asm //程序
 
 ## 心得体会
 
-![image-20230801132050525](C:\Users\Carson Ma\AppData\Roaming\Typora\typora-user-images\image-20230801132050525.png)
-
+//img
 这次作业我从19号晚写到25号早上，期间大大小小备份了13个版本。之前在数落实验课上写的那些东西和流水线CPU一比更像是小打小闹。不过从最开始写之前感觉心理压力很大，生怕写出什么de不出来的bug，到在上学期数逻课的流水线的基础上搭好框架，做好顶层设计，再到最开始的a、b版，最后不知不觉竟比较顺利地完成了，我觉得自己还算比较幸运。
 
 我认为这次作业是数逻课很好的补充。我上数逻课时以为自己学明白了，但只有当我真正自己写一个处理器，需要推敲设计的细节时，我才意识到很多东西我还没明白。比如说之前我没考虑过转发模块在什么时候判断应该把EX/MEM的数据转发给EX，只是按照对PPT的印象觉得应该判断寄存器堆的写使能为真，目标寄存器非0且有寄存器冲突就好。但是我自己在开始编写之前设计时就要细想，我意识到可能这时有效数据还没有生成，我才又将Load-Use冒险和这里联系了起来。又比如对于级间寄存器，保持和清空哪个更优先？或者同时有两个合法的转发来源，该怎么编写判断逻辑使得输入端能接收到正确的那个？这些问题在理论课上我并没有意识到。就是一开始可能学得比较碎片化，不同思维角度之间没有真的融会贯通，这一写才发现问题所在，才真正把思路理清。
 
 我的另外一点收获是认识到了做好整体设计的重要性。我之前程设比较懒，倾向于想到哪写到哪，毕竟软件编程能更轻易地把程序拆成很多模块，即便写错了哪里，借助IDE强大的Debug工具，改起来也很容易。硬件编程虽然也能Debug，但是却不能像软件Debug一样一行一行跑着看，只能看最终波形来猜哪里写错了。定义Input和output接口时更是有很多变量要处理，稍不留神也许就接错了。所以我一开始就大致拟定了一个草稿，把模块怎么分割、各种冒险处理、输入输出和数据通路都大致想清楚，再去编写，写起来就更不容易出犯迷糊。
 
-![draft](C:\Study\2023Summer\Processor\draft.jpg)
+//img
 
 这次实验也有些小遗憾，比如由于Dijkstra代码是在学习流水线之前写的，所以没有有意识地去优化代码，使得CPI比较高，没有把CPU本身的时序性能充分发挥出来。以及我本可以加入简单的动态分支预测，让处理器处理分支指令时的性能更好，但是由于个人的时间原因并没能进一步优化。
 
